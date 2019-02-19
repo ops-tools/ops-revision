@@ -1,0 +1,148 @@
+#!/bin/bash
+
+##
+# Copy files and directories adding revisions
+##
+
+# set -x
+set -e
+
+# Globals
+_src=()
+_dest=""
+_length=16
+_symlink=""
+_no_name=""
+_sed=""
+_help=""
+
+_copy() {
+  local src="${1/%\/}"
+  local revision dest_dir dest_name target_name target out_src out_target
+
+  revision="$(find "${src}" -type f |
+    xargs tail -v -n +1 | \
+    openssl sha256 | cut -d ' ' -f 2 | \
+    cut -c -${_length})"
+
+  if [[ "${_dest}" =~ \/$ ]]; then
+    dest_dir="${_dest/%\/}"
+    dest_name="$(basename "${src}")"
+  else
+    dest_dir="$(dirname "${_dest}")"
+    dest_name="$(basename "${_dest}")"
+  fi
+
+  if [[ "${dest_name}" =~ \.[[:alnum:]]+ ]]; then
+    if [[ "${_no_name}" ]]; then
+      target_name="${revision}${BASH_REMATCH[0]}"
+    else
+      target_name="${dest_name/${BASH_REMATCH[0]}/-${revision}${BASH_REMATCH[0]}}"
+    fi
+  else
+    if [[ "${_no_name}" ]]; then
+      target_name="${revision}"
+    else
+      target_name="${dest_name}-${revision}"
+    fi
+  fi
+
+  target="${dest_dir}/${target_name}"
+
+  out_src="$(basename "${src}")"
+  out_target="${target_name}"
+
+  if [[ "${_sed}" ]]; then
+    echo "s/${out_src}/${out_target}/g"
+  else
+    echo "${out_src} ${out_target}"
+  fi
+
+  mkdir -p "${dest_dir}"
+  cp -ru "${src}" "${target}"
+
+  if [[ "${_symlink}" ]]; then
+    cd "${dest_dir}"
+    ln -s "${target_name}" "${dest_name}.tmp"
+    mv -Tf "${dest_name}.tmp" "${dest_name}"
+  fi
+}
+
+_print_help() {
+  echo "\
+Copy files and directories adding revisions
+
+Usage: $0 [options] src [...src] dest
+
+Options:
+  -l, --length   SHA-256 hash length, default: 16
+  -s, --symlink  Create symlink from plain to revised dest name
+  -n, --no-name  Omit dest name, use only revision
+  -e, --sed      Output with sed replace patterns
+  -h, --help     Print help and exit\
+  "
+}
+
+_parse_args() {
+  until [[ -z "$@" ]]; do
+    case "$@" in
+      -l*|--length*)
+        if [[ "$2" ]]; then
+          _length="$2"
+          shift
+        fi
+        shift
+        ;;
+
+      -s*|--symlink*)
+        _symlink=true
+        shift
+        ;;
+
+      -n*|--no-name*)
+        _no_name=true
+        shift
+        ;;
+
+      -e*|--e*)
+        _sed=true
+        shift
+        ;;
+
+      -h*|--help*)
+        _help=true
+        shift
+        ;;
+
+      [!-]*)
+        if [[ "$2" =~ ^(-.*|$) ]]; then
+          _dest="$1"
+        else
+          _src+=("$1")
+        fi
+        shift
+        ;;
+
+      *)
+        shift
+        ;;
+    esac
+  done
+}
+
+main() {
+  _parse_args "$@"
+
+  if [[ "${_help}" = true || -z "${_src}" || -z "${_dest}" ]]; then
+    _print_help
+    exit
+  fi
+
+  local src; for src in "${_src[@]}"; do
+    _copy "${src}"
+  done
+}
+
+if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
+  main "$@"
+fi
