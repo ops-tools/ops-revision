@@ -33,7 +33,7 @@ _copy() {
     dest_name="$(basename "${_dest}")"
   fi
 
-  if [[ "${dest_name}" =~ \.[[:alnum:]]+ ]]; then
+  if [[ "${dest_name}" =~ \.[[:alnum:]]+$ ]]; then
     if [[ "${_no_name}" ]]; then
       target_name="${revision}${BASH_REMATCH[0]}"
     else
