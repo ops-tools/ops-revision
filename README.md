@@ -33,6 +33,7 @@ Using ops-revision to make unique names for *.js* and *.css* files and replace o
 ```sh
 $ ops-revision src/*.{js,css} dest/ -e | sed -f - -i dest/index.html
 ```
+
 ```sh
 $ tree dest/
 dest/
@@ -49,6 +50,7 @@ Copying a new version of a directory to the destination and atomically switching
 $ ops-revision -s files /var/www/public
 files public-ad93a25ac7c73574
 ```
+
 ```sh
 $ tree *
 files
