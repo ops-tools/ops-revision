@@ -19,7 +19,7 @@ Copy files and directories adding revisions
 Usage: ops-revision [options] src [...src] dest
 
 Options:
-  -l, --length   SHA-256 hash length, default: 16
+  -l, --length   Revision length, default: 16
   -s, --symlink  Create symlink from plain to revised dest name
   -n, --no-name  Omit dest name, use only revision
   -e, --sed      Output with sed replace patterns
