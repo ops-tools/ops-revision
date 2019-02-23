@@ -26,6 +26,28 @@ Options:
   -h, --help     Print help and exit
 ```
 
+### Options
+
+#### -l, --length
+
+The number of symbols the resulting revision will be cut to. The default algorithm for the revision is SHA-256 hash in hex truncated to 16 symbols, so the probability of collision will be 2^32 (2^(128/4)), which means you may face the collision in 1 of 4 billion produced revisions.
+
+#### -s, --symlink
+
+Takes dest name without added revision and makes a symlink to it. If the same symlink already exists, it will be replaced atomically by the new one using `mv` command.
+
+#### -n, --no-name
+
+Produces resulting files without src or dest name, but with revision only.
+
+#### -e, --sed
+
+Writing to stdout `sed` replace patterns formatted as `s/src/dest/g` for piping to sed to make some post-processing, like replacing include directives in other files.
+
+#### -h, --help
+
+Will print usage note with options list then exit.
+
 ## Examples
 
 Using ops-revision to make unique names for *.js* and *.css* files and replace occurrences in *index.html* using sed. This is a widely adopted technique to bust the browser's cache on frontend deploy.
