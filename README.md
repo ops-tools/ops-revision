@@ -8,6 +8,10 @@ Think you give `bar` to the script as a source and `foo` as a destination, then 
 
 The appended revision calculated from sources relative paths concatenated with its contents then hashed by SHA-256 and cut to a reasonable length.
 
+## Installation
+
+Checkout this repo as a submodule or copy [ops-revision](./ops-revision) script to your project.
+
 ## Usage
 
 Running `ops-revision` without parameters or with `--help` switch will show you a short usage message.
