@@ -135,7 +135,7 @@ main() {
 
   if [[ "${_help}" = true || -z "${_src}" || -z "${_dest}" ]]; then
     _print_help
-    exit 1
+    return 1
   fi
 
   local src; for src in "${_src[@]}"; do
