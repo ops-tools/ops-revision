@@ -1,0 +1,27 @@
+{
+  "name": "@ops-tools/ops-revision",
+  "version": "1.0.0",
+  "description": "Copy files and directories adding revisions",
+  "license": "MIT",
+  "author": "Andrey Kravstov <raidendev@gmail.com>",
+  "homepage": "https://github.com/ops-tools/ops-revision",
+  "bugs": "https://github.com/ops-tools/ops-revision/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ops-tools/ops-revision.git"
+  },
+  "keywords": [
+    "revision",
+    "hash",
+    "files",
+    "atomic",
+    "copy"
+  ],
+  "bin": {
+    "ops-revision": "./ops-revision"
+  },
+  "scripts": {
+    "start": "./ops-revision",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
