@@ -138,7 +138,8 @@ main() {
     return 1
   fi
 
-  local src; for src in "${_src[@]}"; do
+  local src;
+  for src in "${_src[@]}"; do
     _copy "${src}"
   done
 }
