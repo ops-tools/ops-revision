@@ -20,8 +20,8 @@ _copy() {
   local src="${1/%\/}"
   local revision dest_dir dest_name target_name target out_src out_target
 
-  revision="$(find "${src}" -type f |
-    xargs tail -v -n +1 | \
+  revision="$(find "${src}" -type f -print0 |
+    xargs -0 tail -v -n +1 | \
     openssl sha256 | cut -d ' ' -f 2 | \
     cut -c -${_length})"
 
